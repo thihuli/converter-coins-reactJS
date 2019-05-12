@@ -10,25 +10,39 @@ export default class Conversot extends Component {
     };
   
     this.converter = this.converter.bind(this);
-    
+
   }
 
     
 
   converter(){
 
-    console.log(this.state);
+    let de_para = `${this.props.moedaA}_${this.props.moedaB}`;
+    let url = `https://free.currconv.com/api/v7/convert?apiKey=sample-api-key&q=${de_para}&compact=ultra&apiKey=1f34bdfbcae53de4e772`
+
+    fetch(url)
+    .then(res => {
+
+      return res.json()
+      
+    })
+    .then(json=>{
+      let cotacao = json[de_para];
+      let moedaB_valor = ( parseFloat(this.state.moedaA_valor) * cotacao).toFixed(2)
+      this.setState({ moedaB_valor })
+    
+    });
 
 
   };
 
   render() {
     return (
-      <div>
-          <h2>{this.props.moedaA}para {this.props.moedaB}</h2>
+      <div className="conversor">
+          <h2>{this.props.moedaA} para {this.props.moedaB}</h2>
           <input type="text" onChange={(event) => {this.setState({moedaA_valor:event.target.value})}}></input>
           <input type="button" value="converter" onClick={this.converter}></input>
-          <h2>valor convertido</h2>
+          <h2>{this.state.moedaB_valor}</h2>
       </div>
     );
   }
